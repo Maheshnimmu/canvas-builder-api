@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:4000/api/canvas';
+const API_URL = 'https://canvas-backend.onrender.com/api/canvas';
 let canvasId = null;
 let previewCanvas = document.getElementById('preview-canvas');
 let ctx = null;
