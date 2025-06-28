@@ -60,31 +60,43 @@ canvasForm.onsubmit = async (e) => {
         return;
     }
 
-    const res = await fetch(`${API_URL}/init`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ width: canvasWidth, height: canvasHeight })
-    });
-    const data = await res.json();
-    if (data.id) {
-        canvasId = data.id;
-        width = canvasWidth;
-        height = canvasHeight;
-        previewCanvas.width = width;
-        previewCanvas.height = height;
+    try {
+        const res = await fetch(`${API_URL}/init`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ width: canvasWidth, height: canvasHeight })
+        });
 
-        ctx = getCanvasContext();
-        if (ctx) {
-            ctx.clearRect(0, 0, width, height);
-
-            ctx.fillStyle = '#e0e0e0';
-            ctx.fillRect(0, 0, width, height);
-            console.log('Canvas created and test background drawn');
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ error: 'Network error' }));
+            alert(`Failed to create canvas: ${errorData.error || 'Unknown error'}`);
+            return;
         }
 
-        allElements = [];
-        document.getElementById('element-controls').style.display = '';
-        document.getElementById('export-pdf').style.display = '';
+        const data = await res.json();
+        if (data.id) {
+            canvasId = data.id;
+            width = canvasWidth;
+            height = canvasHeight;
+            previewCanvas.width = width;
+            previewCanvas.height = height;
+
+            ctx = getCanvasContext();
+            if (ctx) {
+                ctx.clearRect(0, 0, width, height);
+
+                ctx.fillStyle = '#e0e0e0';
+                ctx.fillRect(0, 0, width, height);
+                console.log('Canvas created and test background drawn');
+            }
+
+            allElements = [];
+            document.getElementById('element-controls').style.display = '';
+            document.getElementById('export-pdf').style.display = '';
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        alert('Failed to connect to the server. Please check your internet connection and try again.');
     }
 };
 
@@ -160,22 +172,27 @@ async function addElement(type, properties, drawFn) {
     console.log('Adding element:', type, properties);
     console.log('Canvas ID:', canvasId);
 
-    const res = await fetch(`${API_URL}/elements`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: canvasId, type, properties })
-    });
+    try {
+        const res = await fetch(`${API_URL}/elements`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: canvasId, type, properties })
+        });
 
-    console.log('Response status:', res.status);
+        console.log('Response status:', res.status);
 
-    if (res.ok) {
-        console.log('Element added successfully');
-        allElements.push({ type, properties });
-        redrawPreview();
-    } else {
-        const errorData = await res.json();
-        console.error('Error response:', errorData);
-        alert(`Error adding ${type}: ${errorData.error}`);
+        if (res.ok) {
+            console.log('Element added successfully');
+            allElements.push({ type, properties });
+            redrawPreview();
+        } else {
+            const errorData = await res.json();
+            console.error('Error response:', errorData);
+            alert(`Error adding ${type}: ${errorData.error}`);
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        alert('Failed to add element. Please check your internet connection and try again.');
     }
 }
 
