@@ -1,13 +1,11 @@
-const cors = require('cors');
-app.use(cors());
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const canvasRoutes = require('./routes/canvasRoutes');
 
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
