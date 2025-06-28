@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Builder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Canvas Builder</h1>
+        <form id="canvas-dim-form">
+            <label>Width: <input type="number" id="canvas-width" min="1" required></label>
+            <label>Height: <input type="number" id="canvas-height" min="1" required></label>
+            <button type="submit">Create Canvas</button>
+        </form>
+        <div id="element-controls" style="display:none;">
+            <h2>Add Element</h2>
+            <div class="tabs">
+                <button type="button" class="tab-btn" data-tab="rect">Rectangle</button>
+                <button type="button" class="tab-btn" data-tab="circle">Circle</button>
+                <button type="button" class="tab-btn" data-tab="text">Text</button>
+                <button type="button" class="tab-btn" data-tab="image">Image</button>
+            </div>
+            <div class="tab-content" id="rect">
+                <input type="number" id="rect-x" placeholder="X"> <input type="number" id="rect-y" placeholder="Y">
+                <input type="number" id="rect-w" placeholder="Width"> <input type="number" id="rect-h"
+                    placeholder="Height">
+                <input type="color" id="rect-color" value="#000000">
+                <button type="button" id="add-rect">Add Rectangle</button>
+            </div>
+            <div class="tab-content" id="circle" style="display:none;">
+                <input type="number" id="circle-x" placeholder="Center X"> <input type="number" id="circle-y"
+                    placeholder="Center Y">
+                <input type="number" id="circle-radius" placeholder="Radius">
+                <input type="color" id="circle-color" value="#000000">
+                <button type="button" id="add-circle">Add Circle</button>
+            </div>
+            <div class="tab-content" id="text" style="display:none;">
+                <input type="text" id="text-content" placeholder="Text">
+                <input type="number" id="text-x" placeholder="X"> <input type="number" id="text-y" placeholder="Y">
+                <input type="number" id="text-size" placeholder="Font Size" value="20">
+                <input type="color" id="text-color" value="#000000">
+                <button type="button" id="add-text">Add Text</button>
+            </div>
+            <div class="tab-content" id="image" style="display:none;">
+                <input type="text" id="image-url" placeholder="Image URL" value="https://httpbin.org/image/png">
+                <input type="number" id="image-x" placeholder="X"> <input type="number" id="image-y" placeholder="Y">
+                <input type="number" id="image-w" placeholder="Width" value="200"> <input type="number" id="image-h"
+                    placeholder="Height" value="200">
+                <button type="button" id="add-image">Add Image</button>
+            </div>
+        </div>
+        <h2>Preview</h2>
+        <canvas id="preview-canvas"></canvas>
+        <button id="export-pdf" style="display:none;">Export as PDF</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
